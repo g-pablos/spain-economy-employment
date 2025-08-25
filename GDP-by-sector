@@ -87,7 +87,7 @@ for wedge, autotext in zip(wedges, autotexts):
     autotext.set_color('white' if brightness < 0.5 else 'black')
 
     
-ax.set_title(f'GDP by Sector in Spain ({latest_year})', fontsize=24, pad=4) # Reduce pad to get closer to circle
+ax.set_title(f'GVA by Sector in Spain ({latest_year})', fontsize=24, pad=4) # Reduce pad to get closer to circle
 ax.axis('equal')  # ensure circle
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
