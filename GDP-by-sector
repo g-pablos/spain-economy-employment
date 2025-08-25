@@ -1,0 +1,97 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# === File path ===
+file_path = '/mnt/c/Users/Guille/Desktop/stuff_pc/py_projects/20250606_data_analysis/NEW DATA/VAB_sector.csv'
+
+# === Load and clean data ===
+df = pd.read_csv(file_path, sep='\t', encoding='latin1')
+df = df[df['CNAE Agrupación A10'].notna() & (df['CNAE Agrupación A10'] != '')]
+
+df = df.rename(columns={
+    'CNAE Agrupación A10': 'Sector',
+    'Periodo': 'Year',
+    'Total': 'VAB'
+})
+df['Year'] = pd.to_numeric(df['Year'], errors='coerce')
+df['VAB'] = (
+    df['VAB'].astype(str)
+    .str.replace('.', '', regex=False)
+    .str.replace(',', '.', regex=False)
+    .astype(float)
+)
+
+# === Sector translations ===
+sector_name_dict = {
+    'A Agricultura, ganadería, silvicultura y pesca': 'Agriculture & Fishing',
+    'BDE Industrias extractivas; suministro de energía eléctrica, gas, vapor y aire acondicionado; suministro de agua, actividades de saneamiento, gestión de residuos y descontaminación': 'Extractive, Energy, Water & Waste',
+    'C Industria manufacturera': 'Manufacturing',
+    'F Construcción': 'Construction',
+    'GHI Comercio al por mayor y al por menor; reparación de vehículos de motor y motocicletas; transporte y almacenamiento; hostelería': 'Trade, Transport & Hospitality',
+    'J Información y comunicaciones': 'Information & Comms',
+    'K Actividades financieras y de seguros': 'Finance & Insurance',
+    'L Actividades inmobiliarias': 'Real Estate',
+    'MN Actividades profesionales, científicas y técnicas; actividades administrativas y servicios auxiliares': 'Professional & Admin Services',
+    'OPQ Administración pública y defensa; seguridad social obligatoria; educación; actividades sanitarias y de servicios sociales': 'Public Services (Admin, Education, Health)',
+    'RSTU Actividades artísticas, recreativas y de entretenimiento; otras actividades de servicios; actividades de los hogares como empleadores de personal doméstico; actividades de los hogares como productores de bienes y servicios para uso propio': 'Arts, Other & Household Services'
+}
+
+# === Color palette ===
+sector_color_dict = {
+    'Agriculture & Fishing': '#8FBC8F',
+    'Extractive, Energy, Water & Waste': '#DAA520',
+    'Manufacturing': '#4682B4',
+    'Construction': '#D2691E',
+    'Trade, Transport & Hospitality': '#FFD700',
+    'Information & Comms': '#00CED1',
+    'Finance & Insurance': '#000080',
+    'Real Estate': '#BC8F8F',
+    'Professional & Admin Services': '#9932CC',
+    'Public Services (Admin, Education, Health)': '#2E8B57',
+    'Arts, Other & Household Services': '#DB7093'
+}
+default_color = '#B0B0B0'
+
+# === Filter latest year ===
+latest_year = df['Year'].max()
+latest_df = df[df['Year'] == latest_year].copy()
+
+# === Map names ===
+latest_df['Sector'] = latest_df['Sector'].map(sector_name_dict)
+latest_df = latest_df.dropna(subset=['Sector'])
+
+# === Prepare data for pie chart ===
+latest_df = latest_df.groupby('Sector')['VAB'].sum().sort_values(ascending=False)
+colors = [sector_color_dict.get(sector, default_color) for sector in latest_df.index]
+
+# === Plot ===
+fig, ax = plt.subplots(figsize=(16, 16))
+wedges, texts, autotexts = ax.pie(
+    latest_df,
+    labels=latest_df.index,
+    colors=colors,
+    autopct='%.1f%%',
+    startangle=90,
+    counterclock=False,
+    labeldistance=1.1,
+    textprops={'fontsize': 20}
+)
+
+# Move percentage labels closer to the center and adjust color for readability
+import matplotlib.colors as mcolors
+for wedge, autotext in zip(wedges, autotexts):
+    autotext.set_fontsize(20)
+    autotext.set_position((1.2 * autotext.get_position()[0], 1.2 * autotext.get_position()[1]))
+    rgb = mcolors.to_rgb(wedge.get_facecolor())
+    brightness = (0.299*rgb[0] + 0.587*rgb[1] + 0.114*rgb[2])
+    autotext.set_color('white' if brightness < 0.5 else 'black')
+
+    
+ax.set_title(f'GDP by Sector in Spain ({latest_year})', fontsize=24, pad=4) # Reduce pad to get closer to circle
+ax.axis('equal')  # ensure circle
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+plt.subplots_adjust(top=0.95)  ## fine-tune title position
+#plt.savefig('gdp_pie_latest.png')
+plt.show()
