@@ -4,8 +4,8 @@ import unicodedata
 from matplotlib.patches import Patch
 
 # === File paths ===
-path_gdp = '/mnt/c/Users/Guille/Desktop/stuff_pc/py_projects/20250606_data_analysis/NEW DATA/VAB_sector.csv'
-path_employment = '/mnt/c/Users/Guille/Desktop/stuff_pc/py_projects/20250606_data_analysis/NEW DATA/ocupados_por_actividad_2023_valores_brutos.csv'
+path_gdp = '[file path]'
+path_employment = '[file path]'
 
 
 # === Load GDP data ===
