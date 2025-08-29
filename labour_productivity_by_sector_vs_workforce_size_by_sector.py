@@ -133,7 +133,7 @@ if 'Total Economy' in df_merged['Sector'].values:
     ax.text(df_merged['Employment'].max(), avg_gdp_pw, 'Total Economy Avg', va='bottom', ha='right', fontsize=10, color='gray')
 
 ax.set_xlabel('Employment (Thousands)', fontsize=12)
-ax.set_ylabel('GDP per Worker (€ Thousands)', fontsize=12)
+ax.set_ylabel('GVA per Worker (€ Thousands)', fontsize=12)
 ax.set_title(f'Labour Productivity vs. Workforce Size by Sector ({year_used})', fontsize=14)
 ax.grid(True, linestyle=':', linewidth=0.5)
 from matplotlib.patches import Patch
