@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # === File path ===
-file_path = '/mnt/c/Users/Guille/Desktop/stuff_pc/py_projects/20250606_data_analysis/NEW DATA/VAB_sector.csv'
+file_path = '[file path]'
 
 # === Load and clean data ===
 df = pd.read_csv(file_path, sep='\t', encoding='latin1')
