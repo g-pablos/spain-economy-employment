@@ -17,14 +17,14 @@ sex_title_map = {
 sexo_en = sex_title_map.get(sexo, sexo)  # fallback to original if unmapped
 
 # === Load and Clean Percentage Data ===
-file_path = '/mnt/c/Users/Guille/Desktop/stuff_pc/py_projects/20250606_data_analysis/NEW DATA/empleo_por_sector.csv'
+file_path = '[file path]'
 df = pd.read_csv(file_path, sep='\t', encoding='latin1')
 df['Total'] = df['Total'].replace('..', np.nan).str.replace(',', '.').astype(float)
 df['Year'] = df['Periodo'].str[:4]
 df = df[(df['Sexo'] == sexo) & (df['Unidad'] == 'Porcentaje')]
 
 # === Load Absolute Employment Data ===
-abs_file_path = f"/mnt/c/Users/Guille/Desktop/stuff_pc/py_projects/20250606_data_analysis/NEW DATA/empleo_{sexo.lower()}_valores_absolutos_2008-2025.csv"
+abs_file_path = f"[file path]"
 abs_df = pd.read_csv(abs_file_path, sep='\t', encoding='latin1')
 
 abs_df = abs_df[
